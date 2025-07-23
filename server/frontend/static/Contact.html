@@ -1,0 +1,73 @@
+<html>
+<head>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/bootstrap.min.css">
+</head>
+<div>
+  <nav class="navbar navbar-expand-lg navbar-light" style="background-color:darkturquoise; height: 1in;">
+    <div class="container-fluid">
+      <h2 style="padding-right: 5%;">Dealerships</h2>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" style="font-size: larger;" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" style="font-size: larger;" href="/about">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" style="font-size: larger;" href="/contact">Contact Us</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="card" style="width: 80%; margin: auto; margin-top:5%;">
+    <div class="banner" name="contact-header">
+      <h1>Contact Us</h1>
+      Questions, test drives or financing options? Reach out—we’ll answer fast.
+    </div>
+
+    <div style="display: flex; flex-direction: row; margin:auto; gap: 2rem; padding: 2rem 0;">
+      <!-- Info block -->
+      <div class="card" style="width: 45%; padding: 1rem;">
+        <div class="card-body">
+          <h3 class="title">Get in touch</h3>
+          <p><strong>Phone:</strong> +52 55 5555 5555</p>
+          <p><strong>Email:</strong> <a href="mailto:contact@autoselect.mx">contact@autoselect.mx</a></p>
+          <p><strong>WhatsApp:</strong> +52 1 55 1234 5678</p>
+          <p><strong>Business hours:</strong> Mon–Sat, 09:00–19:00</p>
+          <p><strong>Address:</strong> Av. Insurgentes Sur 1234, Ciudad de México</p>
+        </div>
+      </div>
+
+      <!-- Simple form (no backend todavía) -->
+      <div class="card" style="width: 45%; padding: 1rem;">
+        <div class="card-body">
+          <h3 class="title">Send us a message</h3>
+          <form>
+            <div class="mb-3">
+              <label for="name" class="form-label">Name*</label>
+              <input type="text" id="name" class="form-control" placeholder="Your full name" required>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email*</label>
+              <input type="email" id="email" class="form-control" placeholder="you@example.com" required>
+            </div>
+            <div class="mb-3">
+              <label for="msg" class="form-label">Message*</label>
+              <textarea id="msg" class="form-control" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</html>
