@@ -34,6 +34,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -83,8 +84,9 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "static"
 STATICFILES_DIRS = [
-    BASE_DIR / "frontend" / "build" / "static",  # lo que genera CRA
-    BASE_DIR / "frontend" / "static",            # si tenés estáticos propios
+    BASE_DIR / "frontend" / "build",            # todo el build
+    BASE_DIR / "frontend" / "build" / "static", # JS, CSS dentro de static/
+    BASE_DIR / "frontend" / "static",           # tus estáticos personalizados
 ]
 
 MEDIA_URL = "/media/"

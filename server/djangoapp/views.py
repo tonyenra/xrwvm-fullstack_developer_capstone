@@ -14,22 +14,24 @@ logger = logging.getLogger(__name__)
 
 
 @csrf_exempt
-def login_user(request):
-    if request.method != "POST":
-        return JsonResponse({"detail": "POST required"}, status=405)
+def login_request(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        username = data.get("userName") or data.get("username")
+        password = data.get("password")
+        user = authenticate(username=username, password=password)
+        if user:
+            login(request, user)
+            return JsonResponse({
+                "status": "Authenticated",
+                "userName": user.username,
+                "first_name": user.first_name,
+                "last_name": user.last_name
+            })
+        else:
+            return JsonResponse({"status": "Unauthorized", "userName": username}, status=401)
+    return JsonResponse({"status": "Bad Request"}, status=400)
 
-    try:
-        data = json.loads(request.body.decode("utf-8"))
-        username = data.get("userName", "").strip()
-        password = data.get("password", "")
-    except Exception:
-        return JsonResponse({"status": False, "error": "Invalid JSON"}, status=400)
-
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        login(request, user)
-        return JsonResponse({"userName": username, "status": "Authenticated"})
-    return JsonResponse({"userName": username, "status": "Unauthorized"}, status=401)
 
 
 @csrf_exempt
@@ -86,7 +88,7 @@ def get_dealerships(request, state="All"):
     if(state == "All"):
         endpoint = "/fetchDealers"
     else:
-        endpoint = "/fetchDealers/"+state
+        endpoint = f"/fetchDealers/{state}"
     dealerships = get_request(endpoint)
     return JsonResponse({"status":200,"dealers":dealerships})
 
@@ -105,8 +107,8 @@ def get_dealer_reviews(request, dealer_id):
         reviews = get_request(endpoint)
         for review_detail in reviews:
             response = analyze_review_sentiments(review_detail['review'])
-            print(response)
-            review_detail['sentiment'] = response['sentiment']
+            sentiment = (response or {}).get("sentiment", "neutral")
+            review_detail['sentiment'] = sentiment
         return JsonResponse({"status":200,"reviews":reviews})
     else:
         return JsonResponse({"status":400,"message":"Bad Request"})
