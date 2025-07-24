@@ -1,3 +1,12 @@
+// src/components/Home/Home.jsx
+import { Navigate } from "react-router-dom";
+
 export default function Home() {
-  return <h1>Bienvenido, ya estás logueado</h1>;
+  const username = sessionStorage.getItem("username");
+
+  if (!username) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <h1>Bienvenido, {username}!</h1>;
 }

@@ -1,12 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Login.css";
 import Header from "../Header/Header";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Login = ({ onClose }) => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [open, setOpen] = useState(true);
   const [err, setErr] = useState("");
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Si entran a la URL principal "/", redirige a /login
+  useEffect(() => {
+    if (location.pathname === "/") {
+      navigate("/login", { replace: true });
+    }
+  }, [location.pathname, navigate]);
 
   const login_url = `${window.location.origin}/djangoapp/login`;
 
@@ -18,10 +29,10 @@ const Login = ({ onClose }) => {
       const res = await fetch(login_url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // importante para la cookie de sesión
+        credentials: "include",
         body: JSON.stringify({
-          userName: userName,   // por compatibilidad
-          username: userName,   // si la vista espera 'username'
+          userName: userName,
+          username: userName,
           password: password,
         }),
       });
@@ -36,7 +47,7 @@ const Login = ({ onClose }) => {
         );
         sessionStorage.setItem("firstname", json.first_name || "");
         sessionStorage.setItem("lastname", json.last_name || "");
-        setOpen(false);
+        setOpen(false); // luego redirigimos abajo
       } else {
         setErr("The user could not be authenticated.");
       }
@@ -46,8 +57,9 @@ const Login = ({ onClose }) => {
     }
   };
 
+  // Cuando open pasa a false (login ok o cancelar), redirige a /dealers
   if (!open) {
-    window.location.href = "/dealers/";
+    navigate("/dealers", { replace: true });
     return null;
   }
 
@@ -55,10 +67,7 @@ const Login = ({ onClose }) => {
     <div>
       <Header />
       <div onClick={onClose}>
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="modalContainer"
-        >
+        <div onClick={(e) => e.stopPropagation()} className="modalContainer">
           <form className="login_panel" onSubmit={login}>
             <div>
               <span className="input_field">Username </span>
