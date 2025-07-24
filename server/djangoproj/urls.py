@@ -1,25 +1,24 @@
-"""djangoproj URL Configuration"""
+# djangoproj/urls.py
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
 
+react_view = TemplateView.as_view(template_name="index.html")
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
+    path("djangoapp/", include("djangoapp.urls")),
 
-    # Páginas estáticas
-    path('about/',   TemplateView.as_view(template_name="About.html"),   name='about'),
-    path('contact/', TemplateView.as_view(template_name="Contact.html"), name='contact'),
-    path('',         TemplateView.as_view(template_name="Home.html"),    name='home'),
-
-    # Página React para login
-    path('login/', TemplateView.as_view(template_name="index.html"), name='react-login'),
-    path('register/', TemplateView.as_view(template_name="index.html"), name='react-register'),
-
-    # Rutas del app (incluye el endpoint JSON de login)
-    path('djangoapp/', include('djangoapp.urls')),
+    # Rutas React conocidas
+    path("login/", react_view, name="react-login"),
+    path("register/", react_view, name="react-register"),
+    path("", react_view, name="react-home"),
 ]
+
+# Catch-all para todo lo demás que no sea admin/djangoapp/static/media
+urlpatterns += [re_path(r"^(?!admin/|djangoapp/|static/|media/).*$", react_view)]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

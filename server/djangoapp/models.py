@@ -1,25 +1,44 @@
-# Uncomment the following imports before adding the Model code
+# server/djangoapp/models.py
+from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 
-# from django.db import models
-# from django.utils.timezone import now
-# from django.core.validators import MaxValueValidator, MinValueValidator
+# ---------- CarMake ----------
+class CarMake(models.Model):
+    name        = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+    # Puedes agregar más campos opcionales (country, founded_year, etc.)
 
-
-# Create your models here.
-
-# <HINT> Create a Car Make model `class CarMake(models.Model)`:
-# - Name
-# - Description
-# - Any other fields you would like to include in car make model
-# - __str__ method to print a car make object
+    def __str__(self):
+        return self.name
 
 
-# <HINT> Create a Car Model model `class CarModel(models.Model):`:
-# - Many-To-One relationship to Car Make model (One Car Make has many
-# Car Models, using ForeignKey field)
-# - Name
-# - Type (CharField with a choices argument to provide limited choices
-# such as Sedan, SUV, WAGON, etc.)
-# - Year (IntegerField) with min value 2015 and max value 2023
-# - Any other fields you would like to include in car model
-# - __str__ method to print a car make object
+# ---------- CarModel ----------
+class CarModel(models.Model):
+    car_make  = models.ForeignKey(CarMake, related_name='models', on_delete=models.CASCADE)
+    dealer_id = models.IntegerField()  # ID del dealer en tu DB externa (Mongo/Cloudant)
+    name      = models.CharField(max_length=100)
+
+    # Tipos de auto
+    SEDAN = 'SEDAN'
+    SUV   = 'SUV'
+    WAGON = 'WAGON'
+    COUPE = 'COUPE'
+    TRUCK = 'TRUCK'
+    CAR_TYPES = [
+        (SEDAN, 'Sedan'),
+        (SUV,   'SUV'),
+        (WAGON, 'Wagon'),
+        (COUPE, 'Coupe'),
+        (TRUCK, 'Truck'),
+    ]
+    type = models.CharField(max_length=10, choices=CAR_TYPES, default=SUV)
+
+    # Año con validaciones pedidas (2015–2023)
+    year = models.IntegerField(
+        validators=[MinValueValidator(2015), MaxValueValidator(2023)]
+    )
+
+    color = models.CharField(max_length=30, blank=True)
+
+    def __str__(self):
+        return f"{self.car_make.name} {self.name} ({self.year})"
